@@ -72,7 +72,7 @@ def main():
                 total_epochs, total_iters))
             train_loader = create_dataloader(train_set, dataset_opt)
         elif phase == 'val':
-            val_set = create_dataset(dataset_opt)
+            val_set = create_dataset(dataset_opt,is_train = False)
             val_loader = create_dataloader(val_set, dataset_opt)
             logger.info('Number of val images in [{:s}]: {:d}'.format(dataset_opt['name'],
                                                                       len(val_set)))
