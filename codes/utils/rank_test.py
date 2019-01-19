@@ -42,11 +42,11 @@ def rank_pair_test(predict_file ,label_file):
                 # print(idx,i,j)
 
                 real_rank = 1 if label_score[keys_list[i]] >= label_score[keys_list[j]] else -1
-                # print('label: ',img_name_list[i],img_name_list[j],real_rank)
+                # print('label: ',keys_list[i],keys_list[j],real_rank)
 
                 predict_rank = 1 if predict_score[keys_list[i]] >= predict_score[keys_list[j]] else -1
 
-                # print('predict: ',img_name_list[i],predict_score[img_name_list[i]],img_name_list[j],predict_score[img_name_list[j]],predict_rank)
+                # print('predict: ',keys_list[i],predict_score[keys_list[i]],keys_list[j],predict_score[keys_list[j]],predict_rank)
                 # print('***************')
                 count += 1
                 if real_rank == predict_rank:
