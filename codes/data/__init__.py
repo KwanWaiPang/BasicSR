@@ -19,7 +19,7 @@ def create_dataloader(dataset, dataset_opt):
             dataset, batch_size=1, shuffle=False, num_workers=1, pin_memory=True)
 
 
-def create_dataset(dataset_opt):
+def create_dataset(dataset_opt,is_train = True):
     '''create dataset'''
     mode = dataset_opt['mode']
     if mode == 'LR':
