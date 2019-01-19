@@ -33,12 +33,12 @@
   }
 
   ,"path": {
-    "root": "/home/wlzhang/BasicSR12",
+    "root": "/home/wlzhang/BasicSR",
     // "pretrain_model_E": "/data0/yhliu/BasicSR_rank/experiments/RANK_ESTIMATOR_V3/models/200000_E.pth",
-    "experiments_root": "/home/wlzhang/BasicSR12/experiments/Raker_DF2K_bs64_s296_margin05_rangef55_d01_oversample1_hr_V1",
-    "models": "/home/wlzhang/BasicSR12/experiments/Raker_DF2K_bs64_s296_margin05_rangef55_d01_oversample1_hr_V1/models",
-    "log": "/home/wlzhang/BasicSR12/experiments/Raker_DF2K_bs64_s296_margin05_rangef55_d01_oversample1_hr_V1",
-    "val_images": "/home/wlzhang/BasicSR12/experiments/Raker_DF2K_bs64_s296_margin05_rangef55_d01_oversample1_hr_V1/val_images"
+    "experiments_root": "/home/wlzhang/BasicSR/experiments/Raker_DF2K_bs64_s296_margin05_rangef55_d01_oversample1_hr_V1",
+    "models": "/home/wlzhang/BasicSR/experiments/Raker_DF2K_bs64_s296_margin05_rangef55_d01_oversample1_hr_V1/models",
+    "log": "/home/wlzhang/BasicSR/experiments/Raker_DF2K_bs64_s296_margin05_rangef55_d01_oversample1_hr_V1",
+    "val_images": "/home/wlzhang/BasicSR/experiments/Raker_DF2K_bs64_s296_margin05_rangef55_d01_oversample1_hr_V1/val_images"
   }
 
   ,"network_G": {
