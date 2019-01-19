@@ -153,3 +153,24 @@ def define_F(opt, use_bn=False):
         netF = nn.DataParallel(netF)
     netF.eval()  # No need to train
     return netF
+
+def define_R(opt):
+    gpu_ids = opt['gpu_ids']
+    opt = opt['network_R']
+    which_model = opt['which_model_R']
+
+    if which_model == 'discriminaotr_vgg_128_avgpool':
+        netR = arch.Discriminaotr_VGG_128_AVGPOOL(in_nc=opt['in_nc'], base_nf=opt['nf'], \
+            norm_type=opt['norm_type'], mode=opt['mode'] ,act_type=opt['act_type'])
+    elif which_model == 'dis_acd':
+        netR = sft_arch.ACD_VGG_BN_96()
+    elif which_model == 'dis_acd_sn':
+        netR = sft_arch.ACD_VGG_BN_128_SN()
+    else:
+        raise NotImplementedError('Discriminator model [%s] is not recognized' % which_model)
+
+    print('E network:%s'%which_model)
+    # init_weights(netD, init_type='kaiming', scale=1)
+    if gpu_ids:
+        netR = nn.DataParallel(netR).cuda()
+    return netR
