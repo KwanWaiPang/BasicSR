@@ -27,8 +27,8 @@
       ,"mode": "RANK_IMIM_Pair"
     ,"dataroot_HR": null
     ,"dataroot_LR":null
-      ,"dataroot_img1": "/home/wlzhang/data/RANK_DF2K_d01_stride148_size296_num200_SRGANMSElw15/DF2K_valid_patch_all/"
-    ,"dataroot_label_file": "/home/wlzhang/data/RANK_DF2K_d01_stride148_size296_num200_SRGANMSElw15/DIV2K_valid_patch_label.txt"
+      ,"dataroot_img1": "/home/wlzhang/data/RANK_DF2K_d01_stride148_size296_num200_hr/DF2K_valid_patch_all/"
+    ,"dataroot_label_file": "/home/wlzhang/data/RANK_DF2K_d01_stride148_size296_num200_hr/DIV2K_valid_patch_label.txt"
     }
   }
 
