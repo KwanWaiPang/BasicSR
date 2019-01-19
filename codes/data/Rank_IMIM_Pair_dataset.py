@@ -53,8 +53,8 @@ class RANK_IMIM_Pair_Dataset(data.Dataset):
         # print('index',index)
         if self.is_train:
             # get img1 and img1 label score
-            # choice = random.choice(['img1_img2','img1_img2','img1_img2','img1_img3','img2_img3'])
-            choice = random.choice(['img1_img2', 'img1_img3', 'img2_img3'])
+            choice = random.choice(['img1_img2','img1_img2','img1_img2','img1_img3','img2_img3'])
+            # choice = random.choice(['img1_img2', 'img1_img3', 'img2_img3'])
 
             # print(choice)
 

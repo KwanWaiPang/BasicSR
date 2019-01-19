@@ -169,7 +169,7 @@ def define_R(opt):
     else:
         raise NotImplementedError('Discriminator model [%s] is not recognized' % which_model)
 
-    print('E network:%s'%which_model)
+    print('R network:%s'%which_model)
     # init_weights(netD, init_type='kaiming', scale=1)
     if gpu_ids:
         netR = nn.DataParallel(netR).cuda()

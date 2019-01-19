@@ -1,5 +1,6 @@
 import os
 from collections import OrderedDict
+import logging
 
 import torch
 import torch.nn as nn
@@ -9,6 +10,8 @@ from torch.optim import lr_scheduler
 import models.networks as networks
 from .base_model import BaseModel
 
+logger = logging.getLogger('base')
+
 
 class Ranker_Model(BaseModel):
     def name(self):
@@ -17,12 +20,12 @@ class Ranker_Model(BaseModel):
     def __init__(self, opt):
         super(Ranker_Model, self).__init__(opt)
         train_opt = opt['train']
-        self.input_img1 = self.Tensor()
-        self.label_score1 = self.Tensor()
-        self.input_img2 = self.Tensor()
-        self.label_score2 = self.Tensor()
+        # self.input_img1 = self.Tensor()
+        # self.label_score1 = self.Tensor()
+        # self.input_img2 = self.Tensor()
+        # self.label_score2 = self.Tensor()
 
-        self.label = self.Tensor()
+        # self.label = self.Tensor()
 
         # define network and load pretrained models
         self.netR = networks.define_R(opt)
@@ -33,8 +36,7 @@ class Ranker_Model(BaseModel):
 
             # loss
             self.RankLoss = nn.MarginRankingLoss(margin=0.5)
-            if self.use_gpu:
-                self.RankLoss.cuda()
+            self.RankLoss.to(self.device)
 
             # optimizers
             self.optimizers = []
@@ -121,18 +123,19 @@ class Ranker_Model(BaseModel):
 
     def print_network(self):
         s, n = self.get_network_description(self.netR)
-        print('Number of parameters in E: {:,d}'.format(n))
-        if self.is_train:
-            message = '-------------- Estimator --------------\n' + s + '\n'
-            network_path = os.path.join(self.save_dir, '../', 'E_network.txt')
-            with open(network_path, 'w') as f:
-                f.write(message)
+        if isinstance(self.netR, nn.DataParallel):
+            net_struc_str = '{} - {}'.format(self.netR.__class__.__name__,
+                                             self.netR.module.__class__.__name__)
+        else:
+            net_struc_str = '{}'.format(self.netR.__class__.__name__)
+        logger.info('Network R structure: {}, with parameters: {:,d}'.format(net_struc_str, n))
+        logger.info(s)
 
     def load(self):
-        load_path_R = self.opt['path']['pretrain_model_R']
-        if load_path_R is not None:
-            print('loading model for R [%s] ...' % load_path_R)
-            self.load_network(load_path_R, self.netR)
 
+        load_path_R = self.opt['path']['pretrain_model_G']
+        if load_path_R is not None:
+            logger.info('Loading pretrained model for R [{:s}] ...'.format(load_path_R))
+            self.load_network(load_path_R, self.netR)
     def save(self, iter_label):
         self.save_network(self.save_dir, self.netR, 'R', iter_label)
