@@ -127,7 +127,7 @@ def main():
                 for val_data in val_loader:
                     idx += 1
                     img_name = os.path.splitext(os.path.basename(val_data['img1_path'][0]))[0]
-                    img_dir = os.path.join(opt['path']['val_images'], img_name)
+                    img_dir = os.path.join(opt['path']['val_images'], str(current_step))
                     util.mkdir(img_dir)
                     f = open(os.path.join(img_dir, 'predict_score.txt'), 'a')
 
