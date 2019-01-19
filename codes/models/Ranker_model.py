@@ -133,5 +133,5 @@ class Ranker_Model(BaseModel):
         if load_path_R is not None:
             logger.info('Loading pretrained model for R [{:s}] ...'.format(load_path_R))
             self.load_network(load_path_R, self.netR)
-    def save(self, iter_label):
+    def save(self, iter_step):
         self.save_network(self.netR, 'R', iter_step)
