@@ -20,10 +20,17 @@ def rank_pair_test(predict_file ,label_file):
     keys_list = list(label_score.keys())
     keys_list.sort()
 
-    cursor = keys_list[0].split('_')[0 ] +'_ ' +keys_list[0].split('_')[1]
+    # cursor = keys_list[0].split('_')[0 ] +'_ ' +keys_list[0].split('_')[1]
+    # class_num = 0
+    # for key in keys_list:
+    #     if cursor == key.split('_')[0 ] +'_ ' +key.split('_')[1]:
+    #         class_num += 1
+    #     else:
+    #         break
+    cursor = keys_list[0].split('_')[0]
     class_num = 0
     for key in keys_list:
-        if cursor == key.split('_')[0 ] +'_ ' +key.split('_')[1]:
+        if cursor == key.split('_')[0]:
             class_num += 1
         else:
             break
