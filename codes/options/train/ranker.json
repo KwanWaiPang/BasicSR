@@ -90,11 +90,11 @@
 
     ,"manual_seed": 0
     ,"niter": 2000000
-    ,"val_freq": 5
+    ,"val_freq": 5000
   }
 
   ,"logger": {
-    "print_freq": 2
-    ,"save_checkpoint_freq": 5
+    "print_freq": 200
+    ,"save_checkpoint_freq": 5000
   }
 }
