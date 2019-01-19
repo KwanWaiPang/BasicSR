@@ -66,40 +66,36 @@ class Ranker_Model(BaseModel):
         self.print_network()
         print('-----------------------------------------------')
 
-    def feed_data(self, data, volatile=False, need_img2=True):
+    def feed_data(self, data, need_img2=True):
         # input img1
-        input_img1 = data['img1']
-        self.input_img1.resize_(input_img1.size()).copy_(input_img1)
-        self.var_img1 = Variable(self.input_img1)
+        self.input_img1 = data['img1'].to(self.device)
 
         # label score1
-        label_score1 = data['score1']
+        self.label_score1 = data['score1'].to(self.device)
 
         if need_img2:
             # input img2
-            input_img2 = data['img2']
-            self.input_img2.resize_(input_img2.size()).copy_(input_img2)
-            self.var_img2 = Variable(self.input_img2)
+            self.input_img2 = data['img2'].to(self.device)
+
             # label score2
-            label_score2 = data['score2']
+            self.label_score2 = data['score2'].to(self.device)
 
             # rank label
-            label = label_score1 >= label_score2  # get a ByteTensor
+            self.label = self.label_score1 >= self.label_score2  # get a ByteTensor
             # transfer into FloatTensor
-            label = label.float()
-            label = (label - 0.5) * 2
-            self.label.resize_(label.size()).copy_(label)
-            self.var_label = Variable(self.label, volatile=volatile)
+            self.label = self.label.float()
+            self.label = (self.label - 0.5) * 2
+
 
     def optimize_parameters(self, step):
         self.optimizer_R.zero_grad()
-        self.predict_score1 = self.netR(self.var_img1)
-        self.predict_score2 = self.netR(self.var_img2)
+        self.predict_score1 = self.netR(self.input_img1)
+        self.predict_score2 = self.netR(self.input_img2)
 
         self.predict_score1 = torch.clamp(self.predict_score1, min=-5, max=5)
         self.predict_score2 = torch.clamp(self.predict_score2, min=-5, max=5)
 
-        l_rank = self.RankLoss(self.predict_score1, self.predict_score2, self.var_label)
+        l_rank = self.RankLoss(self.predict_score1, self.predict_score2, self.label)
 
         l_rank.backward()
         self.optimizer_R.step()
@@ -109,7 +105,7 @@ class Ranker_Model(BaseModel):
 
     def test(self):
         self.netR.eval()
-        self.predict_score1 = self.netR(self.var_img1)
+        self.predict_score1 = self.netR(self.input_img1)
         self.netR.train()
 
     def get_current_log(self):
@@ -138,4 +134,4 @@ class Ranker_Model(BaseModel):
             logger.info('Loading pretrained model for R [{:s}] ...'.format(load_path_R))
             self.load_network(load_path_R, self.netR)
     def save(self, iter_label):
-        self.save_network(self.save_dir, self.netR, 'R', iter_label)
+        self.save_network(self.netR, 'R', iter_step)
