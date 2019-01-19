@@ -32,7 +32,7 @@ def create_dataset(dataset_opt):
         from data.LRHR_seg_bg_dataset import LRHRSeg_BG_Dataset as D
     else:
         raise NotImplementedError('Dataset [{:s}] is not recognized.'.format(mode))
-    if 'Rank_IMIM_Pair_dataset' in mode:
+    if 'RANK_IMIM_Pair' in mode:
         dataset = D(dataset_opt, is_train = is_train)
     else:
         dataset = D(dataset_opt)
