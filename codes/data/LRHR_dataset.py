@@ -98,6 +98,24 @@ class LRHRDataset(data.Dataset):
             H, W, C = img_LR.shape
             LR_size = HR_size // scale
 
+            if self.opt['random_scale']:
+                random_scale_index = random.randint(0, 10)*0.01 + 0.9
+                img_HR = util.imresize_np(img_HR, random_scale_index, True)
+
+            if self.opt['random_flip']:
+                H, W, C = img_HR.shape
+                crop_size = 400
+                rnd_h = random.randint(0, max(0, H - crop_size))
+                rnd_w = random.randint(0, max(0, W - crop_size))
+                img_HR = img_HR[rnd_h:rnd_h + crop_size, rnd_w:rnd_w + crop_size, :]
+
+                H, W, C = img_LR.shape
+                crop_size = 100
+                rnd_h = random.randint(0, max(0, H - crop_size))
+                rnd_w = random.randint(0, max(0, W - crop_size))
+                img_LR = img_LR[rnd_h:rnd_h + crop_size, rnd_w:rnd_w + crop_size, :]
+            H, W, C = img_LR.shape
+
             # randomly crop
             rnd_h = random.randint(0, max(0, H - LR_size))
             rnd_w = random.randint(0, max(0, W - LR_size))

@@ -15,6 +15,8 @@ def create_model(opt):
         from .SFTGAN_ACD_model import SFTGAN_ACD_Model as M
     elif model == 'rank':
         from .Ranker_model import Ranker_Model as M
+    elif model == 'ranksrgan':
+        from .RankSRGAN import SRGANModel as M
     else:
         raise NotImplementedError('Model [{:s}] not recognized.'.format(model))
     m = M(opt)

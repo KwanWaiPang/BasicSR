@@ -1,0 +1,106 @@
+{
+  "name": "RankSRGANx4_bs8_ps296_Rdf2K_w0d1_biasf0_esrgan_non_aligned_V1d1" //  SRGANx4_RANK_V1 
+  ,"use_tb_logger": true
+  ,"model":"ranksrgan"
+  ,"scale": 4
+  ,"gpu_ids": [3,5,6,7]
+
+  ,"datasets": {
+    "train": {
+      "name": "DIV2K"
+      ,"mode": "LRHR"
+      ,"dataroot_HR": "/home/wlzhang/BasicSR12/data/DIV2K800_sub.lmdb"
+      ,"dataroot_LR": "/home/wlzhang/BasicSR12/data/DIV2K800_sub_bicLRx4.lmdb"
+      ,"subset_file": null
+      ,"use_shuffle": true
+      ,"n_workers": 8
+      ,"batch_size": 8
+      ,"HR_size": 296
+      ,"use_flip": true
+      ,"use_rot": true
+      , "random_flip": true
+      , "random_scale": true
+    }
+    , "val": {
+      "name": "val_PIRM"
+      ,"mode": "LRHR"
+      ,"dataroot_HR": "/home/wlzhang/BasicSR12/data/val/PIRMtestHR"
+      ,"dataroot_LR": "/home/wlzhang/BasicSR12/data/val/PIRMtest"
+    }
+  }
+
+  ,"path": {
+    "root": "/home/wlzhang/BasicSR",
+    "pretrain_model_G": "/home/wlzhang/BasicSR12/experiments/pretrained_models/SRResNet_bicx4_in3nf64nb16.pth",
+    "pretrain_model_R": "/home/wlzhang/BasicSR/experiments/pretrained_models/RANK_ESTIMATOR_DF2K_bs64_s296_margin05_rangef55_d01_datatrain_oversample3_V1_300000_E_R-V2.pth", 
+    // "pretrain_model_E": "/home/wlzhang/BasicSR12/experiments/pretrained_models/RANK_ESTIMATOR_DF2K_bs64_s296_margin05_rangef55_d01_datatrain_oversample3_V1_300000_E.pth",
+    "experiments_root": "/home/wlzhang/BasicSR/experiments/RankSRGANx4_bs8_ps296_Rdf2K_w0d1_biasf0_esrgan_non_aligned_V1d1",
+    "models": "/home/wlzhang/BasicSR/experiments/RankSRGANx4_bs8_ps296_Rdf2K_w0d1_biasf0_esrgan_non_aligned_V1d1/models",
+    "log": "/home/wlzhang/BasicSR/experiments/RankSRGANx4_bs8_ps296_Rdf2K_w0d1_biasf0_esrgan_non_aligned_V1d1",
+    "val_images": "/home/wlzhang/BasicSR/experiments/RankSRGANx4_bs8_ps296_Rdf2K_w0d1_biasf0_esrgan_non_aligned_V1d1/val_images"
+  }
+
+  ,"network_G": {
+    "which_model_G": "sr_resnet"
+    ,"norm_type": null
+    ,"mode": "CNA"
+    ,"nf": 64
+    ,"nb": 16
+    ,"in_nc": 3
+    ,"out_nc": 3
+    ,"group": 1
+  }
+  ,"network_D": {
+    "which_model_D": "discriminator_vgg_128"
+    ,"norm_type": "batch"
+    ,"act_type": "leakyrelu"
+    ,"mode": "CNA"
+    ,"nf": 64
+    ,"in_nc": 3
+  },
+    "network_R": {
+    "which_model_R": "discriminaotr_vgg_128_avgpool",
+    "norm_type": "batch",
+    "act_type": "leakyrelu",
+    "mode": "CNA",
+    "nf": 64,
+    "in_nc": 3
+  },
+"train": {
+    "lr_G": 0.0001,
+    "train_D": 1,
+    "weight_decay_G": 0,
+    "beta1_G": 0.9,
+    "lr_D": 0.0001,
+    "weight_decay_D": 0,
+    "beta1_D": 0.9,
+    "lr_scheme": "MultiStepLR",
+    "lr_steps": [
+      50000,
+      100000,
+      200000,
+      300000
+    ],
+    "lr_gamma": 0.5,
+    "pixel_criterion": "l1",
+    "pixel_weight": 0,
+    "feature_criterion": "l1",
+    "feature_weight": 0.1,
+    "gan_type": "vanilla",
+    "gan_weight": 0.005,
+    "D_update_ratio": 1,
+    "D_init_iters": 0,
+    "R_weight": 0.03, //regression 0.005   esrgan 0.03  r2 0.1
+    "R_bias": 0,
+    "manual_seed": 0,
+    "niter": 600000.0,
+    "val_freq": 2000.0
+  },
+  "logger": {
+    "print_freq": 200.0
+    ,"save_checkpoint_freq": 2000.0
+  },
+  "timestamp": "180804-004247",
+  "is_train": true,
+  "fine_tune": false
+}

@@ -1,28 +1,29 @@
 {
-  "name": "SRGAN"
+  "name": "SRGAN_non_aligned_V1_42d8w"
   , "suffix": "_SRGAN"
   , "model": "srgan"
   , "scale": 4
-  , "gpu_ids": [0]
+  , "gpu_ids": [3]
 
   , "datasets": {
     "test_1": { // the 1st test dataset
-      "name": "set5"
+      "name": "PIRM"
       , "mode": "LRHR"
-      , "dataroot_HR": "/mnt/SSD/xtwang/BasicSR_datasets/val_set5/Set5"
-      , "dataroot_LR": "/mnt/SSD/xtwang/BasicSR_datasets/val_set5/Set5_bicLRx4"
+    ,"dataroot_HR": "/home/wlzhang/BasicSR12/data/val/PIRMtestHR"
+    ,"dataroot_LR": "/home/wlzhang/BasicSR12/data/val/PIRMtest"
     }
     , "test_2": { // the 2nd test dataset
       "name": "set14"
       , "mode": "LRHR"
-      , "dataroot_HR": "/mnt/SSD/xtwang/BasicSR_datasets/val_set14/Set14"
-      , "dataroot_LR": "/mnt/SSD/xtwang/BasicSR_datasets/val_set14/Set14_bicLRx4"
+      , "dataroot_HR": "/home/wlzhang/BasicSR12/data/val/Set14_mod"
+      , "dataroot_LR": null
     }
   }
 
   , "path": {
-    "root": "/home/xtwang/Projects/BasicSR"
-    , "pretrain_model_G": "../experiments/pretrained_models/SRGAN_bicx4_303_505.pth"
+    "root": "/home/wlzhang/BasicSR"
+    // , "pretrain_model_G": "../experiments/RankSRGANx4_bs8_ps296_Rdf2K_w0d1_biasf0_esrgan_non_aligned_V1/models/460000_G.pth"
+    , "pretrain_model_G": "../experiments/SRGAN_x4_DIV2K/models/428000_G.pth"
   }
 
   , "network_G": {

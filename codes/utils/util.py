@@ -113,6 +113,21 @@ def calculate_psnr(img1, img2):
         return float('inf')
     return 20 * math.log10(255.0 / math.sqrt(mse))
 
+def rmse(img1, img2):
+    img1 = img1.astype(np.float64)
+    img2 = img2.astype(np.float64)
+    mse = np.mean((img1 - img2)**2)
+    if mse == 0:
+        return float('inf')
+    return math.sqrt(mse)
+
+def mse(img1, img2):
+    img1 = img1.astype(np.float64)
+    img2 = img2.astype(np.float64)
+    mse = np.mean((img1 - img2)**2)
+    if mse == 0:
+        return float('inf')
+    return mse
 
 def ssim(img1, img2):
     C1 = (0.01 * 255)**2

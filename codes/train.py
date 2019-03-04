@@ -9,12 +9,15 @@ from collections import OrderedDict
 import logging
 
 import torch
-
+    
 import options.options as option
 from utils import util
 from data import create_dataloader, create_dataset
 from models import create_model
 
+from data.util import bgr2ycbcr
+import matlab
+import matlab.engine
 
 def main():
     # options
@@ -92,7 +95,13 @@ def main():
         start_epoch = 0
 
     # training
+
     logger.info('Start training from epoch: {:d}, iter: {:d}'.format(start_epoch, current_step))
+    
+    eng = matlab.engine.connect_matlab()
+    names = matlab.engine.find_matlab()
+    print('matlab process name: ',names)
+
     for epoch in range(start_epoch, total_epochs):
         for _, train_data in enumerate(train_loader):
             current_step += 1
@@ -120,6 +129,9 @@ def main():
             # validation
             if current_step % opt['train']['val_freq'] == 0:
                 avg_psnr = 0.0
+                scores = 0.0
+                imrmse = 0.0
+                avg_pirm_rmse = 0.0
                 idx = 0
                 for val_data in val_loader:
                     idx += 1
@@ -145,18 +157,27 @@ def main():
                     sr_img = sr_img / 255.
                     cropped_sr_img = sr_img[crop_size:-crop_size, crop_size:-crop_size, :]
                     cropped_gt_img = gt_img[crop_size:-crop_size, crop_size:-crop_size, :]
-                    avg_psnr += util.calculate_psnr(cropped_sr_img * 255, cropped_gt_img * 255)
+                    cropped_sr_img_y = bgr2ycbcr(cropped_sr_img, only_y=True)
+                    cropped_gt_img_y = bgr2ycbcr(cropped_gt_img, only_y=True)
+                    avg_psnr += util.calculate_psnr(cropped_sr_img_y * 255, cropped_gt_img_y * 255)
+                    immse = util.mse(cropped_sr_img_y * 255, cropped_gt_img_y * 255)
+                    avg_pirm_rmse += immse
+                    scores +=  eng.calc_NIQE(save_img_path,4)
 
                 avg_psnr = avg_psnr / idx
+                scores = scores / idx
+                avg_pirm_rmse = math.sqrt(avg_pirm_rmse / idx)
 
                 # log
-                logger.info('# Validation # PSNR: {:.4e}'.format(avg_psnr))
+                logger.info('# Validation # PSNR: {:.4e}, NIQE: {:.4e}, pirm_rmse: {:.4e}'.format(avg_psnr,scores,avg_pirm_rmse))
                 logger_val = logging.getLogger('val')  # validation logger
-                logger_val.info('<epoch:{:3d}, iter:{:8,d}> psnr: {:.4e}'.format(
-                    epoch, current_step, avg_psnr))
+                logger_val.info('<epoch:{:3d}, iter:{:8,d}> psnr: {:.4e}, NIQE: {:.4e}, pirm_rmse: {:.4e}'.format(
+                    epoch, current_step, avg_psnr,scores,avg_pirm_rmse))
                 # tensorboard logger
                 if opt['use_tb_logger'] and 'debug' not in opt['name']:
                     tb_logger.add_scalar('psnr', avg_psnr, current_step)
+                    tb_logger.add_scalar('NIQE', scores, current_step)
+                    tb_logger.add_scalar('pirm_rmse', avg_pirm_rmse, current_step)
 
             # save models and training states
             if current_step % opt['logger']['save_checkpoint_freq'] == 0:
